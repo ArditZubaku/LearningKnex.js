@@ -13,10 +13,12 @@
     "migrate:create": "knex migrate:make $1 -x ts",
     "migrate:run": "knex migrate:latest",
     "migrate:rollback": "knex migrate:rollback",
-    "seed": "knex seed:run"
+    "seed:create": "knex seed:make $1 -x ts",
+    "seed:run": "knex seed:run"
   },
   "devDependencies": {
     "@eslint/js": "^9.14.0",
+    "@faker-js/faker": "^9.3.0",
     "@types/node": "^22.9.0",
     "eslint": "^9.14.0",
     "globals": "^15.12.0",
