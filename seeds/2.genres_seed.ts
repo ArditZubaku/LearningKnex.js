@@ -10,5 +10,5 @@ const createGenres: () => Partial<Genre> = () => ({
 
 export async function seed(knex: Knex): Promise<void> {
     const genres = Array.from({length: SEED_COUNT}, createGenres);
-    await knex().table("genres").insert(genres);
+    await knex("genres").insert(genres);
 }
