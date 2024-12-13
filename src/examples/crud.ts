@@ -80,3 +80,22 @@ export async function updateBookById(id: number, newBook: Partial<Book>): Promis
     await checkIfBooksExists(id);
     return (await knex("books").where({id}).update(newBook).returning("*")).at(0);
 }
+
+export async function deleteBookById(id: number) {
+    await checkIfBooksExists(id);
+    return !!(await knex("books").where({id}).delete());
+}
+
+export async function deleteAuthorById(id: number) {
+    await checkIfAuthorExists(id);
+
+    //• Use COUNT(*) for counting rows. It is straightforward and performs slightly better in theory.
+    //• Use COUNT("id") only if you want to exclude rows where "id" is NULL.
+    const booksCount = (await knex("books").where({author_id: id}).count().first())?.count;
+    console.log("BOOKS COUNT", booksCount)
+    if (Number(booksCount) > 0) {
+        throw new Error("You cannot delete this author");
+    } else {
+        return !!(await knex("authors").where({id}).delete());
+    }
+}

@@ -4,6 +4,8 @@ import {
     createAuthor,
     createBook,
     createGenre,
+    deleteAuthorById,
+    deleteBookById,
     getAllAuthors,
     getAllBooks,
     getAuthorById,
@@ -44,5 +46,7 @@ onDatabaseConnect()
                 genre_id: randomId(),
                 author_id: randomId(),
             }))
+        log(await deleteAuthorById(randomId()));
+        log(await deleteBookById(randomId()));
     })
     .catch((err) => error(err));
