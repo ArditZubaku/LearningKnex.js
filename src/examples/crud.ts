@@ -20,6 +20,10 @@ export async function getGenreById(id: number) {
     return knex("genres").where({id}).first();
 }
 
+export async function getBookById(id: number) {
+    return knex("books").where({id}).first();
+}
+
 export async function createAuthor({name, bio}: Partial<Author>): Promise<Pick<Author, "id" | "name"> | undefined> {
     // return knex("authors").insert({name, bio}, "*").first();
     return knex("authors").insert({name, bio}, ["id", "name"]);
@@ -28,7 +32,7 @@ export async function createAuthor({name, bio}: Partial<Author>): Promise<Pick<A
 export async function createGenre(genre: Partial<Genre>) {
     // return knex("genres").insert(genre, "*");
     // return knex("genres").insert(genre, "*").returning("*").then(rows => rows[0]);
-    return (await knex("genres").insert(genre, "*"))[0];
+    return (await knex("genres").insert(genre, "*")).at(0);
 }
 
 async function checkIfAuthorExists(id?: number) {
@@ -48,7 +52,31 @@ async function checkIfGenreExists(id?: number) {
     if (!genre) throw new Error("Invalid ID");
 }
 
+async function checkIfBooksExists(id?: number) {
+    if (!id) throw new Error("Book ID is required!");
+
+    const book = await getBookById(id);
+    if (!book) throw new Error("Invalid ID");
+}
+
 export async function createBook(book: Partial<Book>): Promise<Book | undefined> {
     await Promise.all([checkIfAuthorExists(book.author_id), checkIfGenreExists(book.genre_id)]);
     return (await knex("books").insert(book, "*")).at(0);
+}
+
+export async function updateAuthorById(id: number, newAuthor: Partial<Author>): Promise<Author | undefined> {
+    await checkIfAuthorExists(id);
+    // return (await knex("authors").update(newAuthor).where({id}).returning("*")).at(0);
+    return (await knex("authors").where({id}).update(newAuthor, "*")).at(0);
+}
+
+export async function updateBookById(id: number, newBook: Partial<Book>): Promise<Book | undefined> {
+    if (newBook.author_id) {
+        await checkIfAuthorExists(newBook.author_id);
+    }
+    if (newBook.genre_id) {
+        await checkIfGenreExists(newBook.genre_id);
+    }
+    await checkIfBooksExists(id);
+    return (await knex("books").where({id}).update(newBook).returning("*")).at(0);
 }
