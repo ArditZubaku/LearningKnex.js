@@ -1,20 +1,7 @@
 import {error, log} from "console";
 import {onDatabaseConnect} from "./config/knex";
-import {
-    createAuthor,
-    createBook,
-    createGenre,
-    deleteAuthorById,
-    deleteBookById,
-    getAllAuthors,
-    getAllBooks,
-    getAuthorById,
-    updateAuthorById,
-    updateBookById
-} from "./examples/crud";
 import {faker} from "@faker-js/faker/locale/en";
-import {randomUUID} from "node:crypto";
-import {getTopAuthorsAndBookCount, getBooksWithAuthorAndGenre} from "./examples/relations";
+import {createAuthorWithBook, getLastAuthor} from "./examples/transactions";
 
 const randomId = () => faker.number.int({min: 1, max: 100});
 
@@ -50,6 +37,9 @@ onDatabaseConnect()
         // log(await deleteAuthorById(randomId()));
         // log(await deleteBookById(randomId()));
         // log(await getBooksWithAuthorAndGenre());
-        log(await getTopAuthorsAndBookCount());
+        // log(await getTopAuthorsAndBookCount());
+        log(await getLastAuthor());
+        log(await createAuthorWithBook());
+        log(await getLastAuthor());
     })
     .catch((err) => error(err));
