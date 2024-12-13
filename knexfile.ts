@@ -29,10 +29,25 @@ const pgConfig: Knex.Config = {
     migrations: {
         tableName: "knex_migrations",
         directory: "./migrations",
-    }
+    },
+    debug: true,
+    log: {
+        warn(message) {
+            console.warn("Knex warning:", message);
+        },
+        error(message) {
+            console.error("Knex error:", message);
+        },
+        deprecate(message) {
+            console.log("Knex deprecation:", message);
+        },
+        debug(message) {
+            console.log("Knex debug:", message);
+        },
+    },
 }
 
-const config: { [key: string]: Knex.Config } = {
+const config: Record<"development" | "staging" | "production", Knex.Config> = {
     development: pgConfig,
     staging: pgConfig,
     production: pgConfig,
