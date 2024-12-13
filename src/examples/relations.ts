@@ -12,3 +12,12 @@ export async function getBooksWithAuthorAndGenre(): Promise<(Pick<Book, "id" | "
             "genres.name as genre_name"
         ).limit(10);
 }
+
+export async function getTopAuthorsAndBookCount() {
+    return knex("authors")
+        .join("books", "books.author_id", "authors.id")
+        .select("name", knex.raw("count(books.id) as books_count"))
+        .groupBy("authors.id")
+        .orderBy("books_count", "desc")
+        .limit(10) as unknown as (Pick<Author, "name"> & { books_count: number })[];
+}

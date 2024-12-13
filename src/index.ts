@@ -14,7 +14,7 @@ import {
 } from "./examples/crud";
 import {faker} from "@faker-js/faker/locale/en";
 import {randomUUID} from "node:crypto";
-import {getBooksWithAuthorAndGenre} from "./examples/relations";
+import {getTopAuthorsAndBookCount, getBooksWithAuthorAndGenre} from "./examples/relations";
 
 const randomId = () => faker.number.int({min: 1, max: 100});
 
@@ -49,6 +49,7 @@ onDatabaseConnect()
         //     }))
         // log(await deleteAuthorById(randomId()));
         // log(await deleteBookById(randomId()));
-        log(await getBooksWithAuthorAndGenre());
+        // log(await getBooksWithAuthorAndGenre());
+        log(await getTopAuthorsAndBookCount());
     })
     .catch((err) => error(err));
