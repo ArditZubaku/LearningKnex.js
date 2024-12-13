@@ -1,6 +1,8 @@
 import "dotenv/config";
-import Knex from "knex";
+import type {Knex} from "knex";
 import {env} from "node:process";
+
+// Update with your config settings.
 
 const {
     DB_HOST,
@@ -10,7 +12,7 @@ const {
     DB_DATABASE,
 } = env;
 
-const knex = Knex({
+const pgConfig: Knex.Config = {
     client: "postgresql",
     connection: {
         host: DB_HOST,
@@ -23,10 +25,17 @@ const knex = Knex({
     pool: {
         min: 2,
         max: 10
+    },
+    migrations: {
+        tableName: "knex_migrations",
+        directory: "./migrations",
     }
-})
+}
 
-export const onDatabaseConnect = async () => await knex.raw("SELECT 1");
+const config: { [key: string]: Knex.Config } = {
+    development: pgConfig,
+    staging: pgConfig,
+    production: pgConfig,
+};
 
-export default knex;
-
+export default config;

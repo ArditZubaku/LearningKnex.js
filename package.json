@@ -1,9 +1,20 @@
 {
-  "name": "LearningKnex.js",
+  "name": "learning-knex-js",
   "version": "1.0.0",
   "main": "index.js",
   "author": "ArditZubaku <zubaku92@gmail.com>",
   "license": "MIT",
+  "scripts": {
+    "start": "ts-node src/index.ts",
+    "lint": "eslint . --ext .ts",
+    "lint:fix": "eslint . --ext .ts --fix",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "migrate:create": "knex migrate:make $1 -x ts",
+    "migrate:run": "knex migrate:latest",
+    "migrate:rollback": "knex migrate:rollback",
+    "seed": "knex seed:run"
+  },
   "devDependencies": {
     "@eslint/js": "^9.14.0",
     "@types/node": "^22.9.0",
